@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../game/presentation/pages/game.page.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -13,7 +15,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         body: Center(
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const GamePage(),
+            ),
+          );
+        },
         child: const Text(
           'Novo jogo',
         ),
