@@ -90,7 +90,7 @@ class CheckGameStatusUsecase {
   GameEntity _allPlayersHaveLost({
     required GameEntity game,
   }) {
-    if (game.playing.length == 1) {
+    if (game.playing.length == 1 && game.winners.isEmpty) {
       game.winners.add(game.playing[0]);
       game.playing.clear();
     }
