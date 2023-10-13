@@ -2,7 +2,7 @@ import 'card.entity.dart';
 
 class PlayerEntity {
   final String name;
-  final List<CardEntity> hand;
+  List<CardEntity> hand;
 
   PlayerEntity({
     required this.name,

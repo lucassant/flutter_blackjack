@@ -1,7 +1,7 @@
 import '../entities/entities.dart';
 
 abstract class CardRepository {
-  Future<CardEntity> drawCards({
+  Future<List<CardEntity>> drawCards({
     required String deckId,
     required int count,
   });

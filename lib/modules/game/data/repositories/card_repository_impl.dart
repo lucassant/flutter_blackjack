@@ -12,16 +12,20 @@ class CardRepositoryImpl extends CardRepository {
   });
 
   @override
-  Future<CardEntity> drawCards({
+  Future<List<CardEntity>> drawCards({
     required String deckId,
     required int count,
   }) async {
     try {
       final endpoint = '/deck/$deckId/draw/?count=$count';
 
+      final List<CardEntity> result = [];
+
       final response = await networkClient.getRequest(endpoint);
 
-      final result = CardModel.fromJson(response).toEntity;
+      response['cards'].forEach((card) {
+        result.add(CardModel.fromJson(card).toEntity);
+      });
 
       return result;
     } catch (e) {

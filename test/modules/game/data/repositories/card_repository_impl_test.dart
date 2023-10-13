@@ -25,9 +25,18 @@ void main() {
     test('should draw cards successfully', () async {
       // Arrange
       final Map<String, dynamic> mockResponse = {
-        'image': 'test_image_url',
-        'value': 'KING',
-        'suit': 'SPADES'
+        'cards': [
+          {
+            'image': 'test_image_url_1',
+            'value': 'KING',
+            'suit': 'SPADES',
+          },
+          {
+            'image': 'test_image_url_2',
+            'value': 'QUEEN',
+            'suit': 'HEARTS',
+          },
+        ],
       };
 
       when(networkClient.getRequest(endpoint))
@@ -38,10 +47,10 @@ void main() {
           await cardRepository.drawCards(deckId: deckId, count: count);
 
       // Assert
-      expect(result, isA<CardEntity>());
-      expect(result.image, equals('test_image_url'));
-      expect(result.value, equals('KING'));
-      expect(result.suit, equals('SPADES'));
+      expect(result, isA<List<CardEntity>>());
+      expect(result.length, equals(mockResponse['cards'].length));
+      expect(result[0].image, equals('test_image_url_1'));
+      expect(result[1].value, equals('QUEEN'));
     });
 
     test('should rethrow an error if network request fails', () async {

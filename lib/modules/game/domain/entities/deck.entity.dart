@@ -1,8 +1,8 @@
 class DeckEntity {
   final String deckId;
-  final int remaining;
+  int remaining;
 
-  const DeckEntity({
+  DeckEntity({
     required this.deckId,
     required this.remaining,
   });

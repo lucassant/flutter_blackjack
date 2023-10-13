@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blackjack/modules/home/presentation/pages/home.page.dart';
 
+import 'modules/app.module.dart';
+
 void main() {
+  final appModule = AppModule();
+  appModule.initModules();
+
   runApp(const MyApp());
 }
 

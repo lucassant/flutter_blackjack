@@ -9,7 +9,10 @@ void main() {
       const remaining = 42;
 
       // Act
-      const deckEntity = DeckEntity(deckId: deckId, remaining: remaining);
+      final deckEntity = DeckEntity(
+        deckId: deckId,
+        remaining: remaining,
+      );
 
       // Assert
       expect(deckEntity, isA<DeckEntity>());
