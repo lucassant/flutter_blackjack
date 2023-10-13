@@ -7,12 +7,14 @@ class PlayerCardComponent extends StatelessWidget {
   final double cardWidth;
   final PlayerEntity playerEntity;
   final bool showDivider;
+  final bool isLoser;
 
   const PlayerCardComponent({
     Key? key,
     required this.cardWidth,
     required this.playerEntity,
     this.showDivider = false,
+    this.isLoser = false,
   }) : super(key: key);
 
   @override
@@ -25,16 +27,18 @@ class PlayerCardComponent extends StatelessWidget {
         ),
         Text(
           playerEntity.name,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
+            color: isLoser ? Colors.red[900] : Colors.white,
           ),
         ),
         Text(
           '${playerEntity.getScore} pontos',
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 14,
+            color: isLoser ? Colors.red[900] : Colors.white,
           ),
         ),
         const SizedBox(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../domain/enums/game_status.enum.dart';
+
 import '../components/components.dart';
 import '../controllers/game_page.controller.dart';
 
@@ -47,12 +49,18 @@ class _GamePageState extends State<GamePage> {
             child: AnimatedBuilder(
                 animation: controller,
                 builder: (context, snapshot) {
-                  if (controller.isPageLoading) {
+                  if (controller.gameStatus == GameStatus.loading) {
                     return const LoadingPageComponent();
                   }
 
                   if (controller.gameEntity == null) {
                     return const ErrorPageComponent();
+                  }
+
+                  if (controller.gameStatus == GameStatus.finished) {
+                    return GameOverComponent(
+                      gameEntity: controller.gameEntity!,
+                    );
                   }
 
                   final dealer = controller.gameEntity!.players[0];
@@ -76,10 +84,14 @@ class _GamePageState extends State<GamePage> {
                             final player =
                                 controller.gameEntity!.players[index + 1];
 
+                            final bool isLoser =
+                                controller.gameEntity!.losers.contains(player);
+
                             return PlayerCardComponent(
                               cardWidth: cardWidth,
                               playerEntity: player,
                               showDivider: true,
+                              isLoser: isLoser,
                             );
                           },
                         ),

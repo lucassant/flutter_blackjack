@@ -26,7 +26,7 @@ class ButtonsListComponent extends StatelessWidget {
               onPressed: () async {
                 await controller.newTurn();
               },
-              text: 'Nova rodada',
+              text: 'Pegar carta',
             ),
             const SizedBox(
               width: 8,
@@ -35,7 +35,7 @@ class ButtonsListComponent extends StatelessWidget {
               onPressed: () async {
                 await controller.shuffleRemainingCards();
               },
-              text: 'Embaralhar cartas',
+              text: 'Embaralhar deck',
             ),
             const SizedBox(
               width: 8,

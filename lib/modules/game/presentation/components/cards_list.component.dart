@@ -18,7 +18,7 @@ class CardsListComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 100,
+      height: listHeight,
       child: ListView(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,

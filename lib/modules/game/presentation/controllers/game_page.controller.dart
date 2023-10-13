@@ -1,36 +1,37 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_blackjack/modules/game/domain/enums/game_status.enum.dart';
 
 import '../../domain/entities/entities.dart';
 import '../../domain/usecases/usecases.dart';
 
 class GamePageController extends ChangeNotifier {
-  final CreateDeckUsecase createDeckUsecase;
+  final CheckGameStatusUsecase checkGameStatusUsecase;
+  final StartNewGameUsecase startNewGameUsecase;
   final DrawCardsUsecase drawCardsUsecase;
   final ShuffleDeckUsecase shuffleDeckUsecase;
 
   GamePageController({
-    required this.createDeckUsecase,
+    required this.checkGameStatusUsecase,
+    required this.startNewGameUsecase,
     required this.drawCardsUsecase,
     required this.shuffleDeckUsecase,
   });
 
   GameEntity? gameEntity;
-  bool isPageLoading = false;
+  GameStatus gameStatus = GameStatus.loading;
 
   Future<void> initGame({
     required numberOfPlayers,
   }) async {
-    _setPageLoading(true);
+    _setPageLoading(GameStatus.loading);
 
-    await _initializeGameEntity(
+    gameEntity = await startNewGameUsecase(
       numberOfPlayers: numberOfPlayers,
     );
 
     await _drawCards();
 
-    _setPageLoading(false);
+    _setPageLoading(GameStatus.playing);
   }
 
   Future<void> newTurn() async {
@@ -39,13 +40,16 @@ class GamePageController extends ChangeNotifier {
     }
 
     try {
-      _setPageLoading(true);
+      _setPageLoading(GameStatus.loading);
 
       await _drawCards();
 
-      log('O jogo acabou? ${_checkIfGameIsOver()}');
+      if (_checkIfGameIsOver()) {
+        _setPageLoading(GameStatus.finished);
+        return;
+      }
 
-      _setPageLoading(false);
+      _setPageLoading(GameStatus.playing);
     } catch (e) {
       rethrow;
     }
@@ -57,135 +61,50 @@ class GamePageController extends ChangeNotifier {
     }
 
     try {
-      _setPageLoading(true);
+      _setPageLoading(GameStatus.loading);
 
       await shuffleDeckUsecase(
         deckId: gameEntity!.deck.deckId,
       );
 
-      _setPageLoading(false);
+      _setPageLoading(GameStatus.playing);
     } catch (e) {
       rethrow;
     }
   }
 
-  void _setPageLoading(bool value) {
-    isPageLoading = value;
+  void _setPageLoading(GameStatus value) {
+    gameStatus = value;
     notifyListeners();
   }
 
   bool _checkIfGameIsOver() {
-    bool isGameOver = false;
-
     if (gameEntity == null) {
       assert(false, 'GameEntity is null');
     }
 
-    final dealer = gameEntity!.players[0];
-    final dealerScore = dealer.getScore;
+    gameEntity!.rounds++;
 
-    log('Dealer tem $dealerScore pontos');
+    checkGameStatusUsecase(game: gameEntity!);
 
-    if (dealerScore == 21) {
-      isGameOver = true;
-      gameEntity!.winners.add(dealer);
-    } else if (dealerScore > 21) {
-      isGameOver = true;
-      gameEntity!.winners.addAll(gameEntity!.players.where((player) {
-        return player.getScore <= 21;
-      }));
-    }
-
-    if (isGameOver) {
-      return isGameOver;
-    }
-
-    for (int i = 1; i < gameEntity!.players.length; i++) {
-      final player = gameEntity!.players[i];
-      final playerScore = player.getScore;
-
-      log('${player.name} tem $playerScore pontos');
-
-      if (playerScore == 21) {
-        log('${player.name} ganhou com 21 pontos!');
-        isGameOver = true;
-      } else if (playerScore > 21) {
-        log('${player.name} perdeu');
-        isGameOver = true;
-      }
-    }
-
-    return isGameOver;
+    return gameEntity!.isGameOver;
   }
 
-  Future<List<CardEntity>> _drawCards() async {
-    final cards = await drawCardsUsecase(
+  Future<void> _drawCards() async {
+    final playersWithCards = await drawCardsUsecase(
       deckId: gameEntity!.deck.deckId,
-      numberOfCards: gameEntity!.players.length,
+      players: gameEntity!.playing,
     );
 
-    gameEntity!.deck.remaining -= cards.length;
+    gameEntity!.deck.remaining -= playersWithCards.length;
 
-    _addCardsToPlayersHands(cards);
-
-    return cards;
-  }
-
-  void _addCardsToPlayersHands(List<CardEntity> cards) {
-    for (int i = 0; i < gameEntity!.players.length; i++) {
-      gameEntity!.players[i].hand.add(cards[i]);
-    }
-  }
-
-  Future<void> _initializeGameEntity({
-    required int numberOfPlayers,
-  }) async {
-    final players = _createPlayers(
-      numberOfPlayers: numberOfPlayers + 1,
-    );
-
-    try {
-      final deck = await createDeckUsecase();
-
-      gameEntity = GameEntity(
-        deck: deck,
-        players: players,
-      );
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  List<PlayerEntity> _createPlayers({
-    required int numberOfPlayers,
-  }) {
-    final List<PlayerEntity> players = [];
-
-    for (int i = 0; i < numberOfPlayers; i++) {
-      if (i == 0) {
-        players.add(
-          PlayerEntity(
-            name: 'Dealer',
-            hand: [],
-          ),
-        );
-      } else {
-        players.add(
-          PlayerEntity(
-            name: 'Player $i',
-            hand: [],
-          ),
-        );
-      }
-    }
-
-    return players;
+    gameEntity!.playing = playersWithCards;
   }
 
   @override
   void dispose() {
     gameEntity = null;
-    _setPageLoading(false);
+    _setPageLoading(GameStatus.loading);
     super.dispose();
   }
 }

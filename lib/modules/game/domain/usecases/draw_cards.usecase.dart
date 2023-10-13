@@ -8,17 +8,23 @@ class DrawCardsUsecase {
     required this.repository,
   });
 
-  Future<List<CardEntity>> call({
+  Future<List<PlayerEntity>> call({
     required String deckId,
-    required int numberOfCards,
+    required List<PlayerEntity> players,
   }) async {
     try {
-      final result = await repository.drawCards(
+      final List<PlayerEntity> playersWithNewCards = players;
+
+      final cards = await repository.drawCards(
         deckId: deckId,
-        count: numberOfCards,
+        count: players.length,
       );
 
-      return result;
+      for (int i = 0; i < players.length; i++) {
+        playersWithNewCards[i].hand.add(cards[i]);
+      }
+
+      return playersWithNewCards;
     } catch (e) {
       rethrow;
     }

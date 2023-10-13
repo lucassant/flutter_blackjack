@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter_blackjack/modules/game/presentation/controllers/game_page.controller.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../core/data/dio_connection_impl.dart';
@@ -8,6 +7,7 @@ import '../../core/data/external_connection.dart';
 import 'data/repositories/repositories.dart';
 import 'domain/repositories/repositories.dart';
 import 'domain/usecases/usecases.dart';
+import 'presentation/controllers/game_page.controller.dart';
 
 class GameModule {
   final ExternalConnection networkClient = DioConnectionImpl();
@@ -26,9 +26,9 @@ class GameModule {
       ),
     );
 
-    getIt.registerFactory<CreateDeckUsecase>(
-      () => CreateDeckUsecase(
-        repository: getIt<DeckRepository>(),
+    getIt.registerFactory<StartNewGameUsecase>(
+      () => StartNewGameUsecase(
+        deckRepository: getIt<DeckRepository>(),
       ),
     );
 
@@ -46,7 +46,8 @@ class GameModule {
 
     getIt.registerFactory<GamePageController>(
       () => GamePageController(
-        createDeckUsecase: getIt<CreateDeckUsecase>(),
+        checkGameStatusUsecase: CheckGameStatusUsecase(),
+        startNewGameUsecase: getIt<StartNewGameUsecase>(),
         drawCardsUsecase: getIt<DrawCardsUsecase>(),
         shuffleDeckUsecase: getIt<ShuffleDeckUsecase>(),
       ),
