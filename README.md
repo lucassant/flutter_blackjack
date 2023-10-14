@@ -25,10 +25,12 @@ Este projeto segue uma estrutura de Clean Architecture para manter o código org
 
 - `lib/` : Contém a implementação do jogo de Blackjack.
   - `core/` : Contém as classes que são compartilhadas entre os módulos.
-  - `data/` : Implementa os repositórios concretos e mapas de dados.
-  - `domain/` : Contém as regras de negócio e casos de uso.
-  - `presentation/` : Lida com a interface do usuário e a camada de apresentação.
+  - `modules/` : Contém os módulos do aplicativo.    
+    - `data/` : Implementa os repositórios concretos e mapas de dados.
+    - `domain/` : Contém as regras de negócio e casos de uso.
+    - `presentation/` : Lida com a interface do usuário e a camada de apresentação.
   - `main.dart` : Ponto de entrada do aplicativo.
+- `test/` : Contém os testes unitários e de widget.
 
 ## Pré-requisitos
 
