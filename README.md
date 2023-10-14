@@ -32,6 +32,14 @@ Este projeto segue uma estrutura de Clean Architecture para manter o código org
   - `main.dart` : Ponto de entrada do aplicativo.
 - `test/` : Contém os testes unitários e de widget.
 
+## Cobertura de testes
+
+<br/><br/>
+<div align="center">
+<img src="lcov.png" width="700">
+</div>
+<br/><br/>
+
 ## Pré-requisitos
 
 Certifique-se de ter as seguintes ferramentas instaladas:
