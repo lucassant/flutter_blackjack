@@ -1,4 +1,4 @@
-# Jogo de Blackjack em Flutter com Clean Architecture
+# Jogo de Blackjack em Flutter
 
 Este é um projeto de exemplo de um jogo de Blackjack criado em Flutter que segue os princípios de Clean Architecture. O objetivo deste projeto é demonstrar como organizar o código em camadas e manter um código limpo e bem estruturado.
 
