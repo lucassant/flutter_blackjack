@@ -2,6 +2,12 @@
 
 Este é um projeto de exemplo de um jogo de Blackjack criado em Flutter que segue os princípios de Clean Architecture. O objetivo deste projeto é demonstrar como organizar o código em camadas e manter um código limpo e bem estruturado.
 
+<br/><br/><br/>
+<div align="center">
+<img src="https://github.com/lucassant/flutter_blackjack/blob/main/gif%20blackjack.gif" width="400">
+</div>
+<br/><br/><br/>
+
 ## Características do Jogo
 
 - É possível ter mais de um jogador na mesa
